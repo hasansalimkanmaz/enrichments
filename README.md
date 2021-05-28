@@ -21,5 +21,5 @@ Examples of when it makes sense to use an enrichment
   * Geocoding of addresses
   * Standardising non-standard entities like product codes.
 
-# Get help
+## Get help
 For any questions, feel free to open an issue here on GitHub or contact the Metamaze team at support@metamaze.eu.
