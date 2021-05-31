@@ -13,7 +13,7 @@ import requests
 from flask import Flask, abort, jsonify, make_response, request
 from flask_cors import CORS, cross_origin
 
-from .config import AIRTABLE_TOKEN, AIRTABLE_URL, BEARER_TOKEN
+from config import AIRTABLE_TOKEN, AIRTABLE_URL, BEARER_TOKEN
 
 app = Flask(__name__)
 
@@ -64,8 +64,7 @@ def get_gender_from_name():
     enrichments = []
 
     for entity in content["entities"]:
-        if entity["entityId"] == "60b0bb56a202212f4f02d9af":  # entityId of name
-
+        if entity["entityName"] == "Naam":
             try:
                 gender = name_to_gender_mapping[entity["text"].lower()]
             except KeyError:
