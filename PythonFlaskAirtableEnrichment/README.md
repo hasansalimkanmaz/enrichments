@@ -6,6 +6,13 @@ For this example, we have created an Airtable that matches names to genders. You
 
 After creating a new Airtable, go to https://airtable.com/api and select your API docs. 
 
+## Testing in Kubernetes
+You can also find a [Dockerfile](./Dockerfile) and base helm template to serve this example on a kubernetes cluster using `gunicorn`.
+You should adapt the [values.yaml](./helm-airtable-enrichment/values.yaml) with the necessary fields according to your case.
+Build the docker image and push it to your container registry and then `helm install` to deploy your enrichment.
+
+
+## Feedback
 If you have any issues or comments, feel free to open a GitHub issue or contact us at support@metamaze.eu
 
 www.metamaze.eu
