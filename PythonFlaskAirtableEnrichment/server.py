@@ -20,23 +20,14 @@ app = Flask(__name__)
 CORS(app, support_credentials=True)
 
 
-def check_token(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        print("headers: ", request.headers)
-        try:
-            token_header = request.headers["authorization"]
-        except KeyError:
-            return abort(403, description="Authentication header missing.")
+def create_app():
 
-        auth_token = token_header.split(maxsplit=1)[1]
-        if auth_token != BEARER_TOKEN:
-            logging.error(f"Bad token '{auth_token}'")
-            return abort(403, description="Incorrect or no authentication token.")
+    app.name_to_gender_mapping = {
+        record["name"].lower(): record["gender"] for record in get_airtable_data(AIRTABLE_URL, AIRTABLE_TOKEN)
+    }
+    app.possible_genders = {record["gender"] for record in get_airtable_data(AIRTABLE_URL, AIRTABLE_TOKEN)}
 
-        return f(*args, **kwargs)
-
-    return decorated
+    return app
 
 
 def get_airtable_data(url: str, token: str):
@@ -56,6 +47,25 @@ def get_airtable_data(url: str, token: str):
     return [record["fields"] for record in records]
 
 
+def check_token(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        print("headers: ", request.headers)
+        try:
+            token_header = request.headers["authorization"]
+        except KeyError:
+            return abort(403, description="Authentication header missing.")
+
+        auth_token = token_header.split(maxsplit=1)[1]
+        if auth_token != BEARER_TOKEN:
+            logging.error(f"Bad token '{auth_token}'")
+            return abort(403, description="Incorrect or no authentication token.")
+
+        return f(*args, **kwargs)
+
+    return decorated
+
+
 @app.route("/api/gender-lookup", methods=["GET"])
 @check_token
 def get_gender_from_name():
@@ -66,7 +76,7 @@ def get_gender_from_name():
     for entity in content["entities"]:
         if entity["entityName"] == "Naam":
             try:
-                gender = name_to_gender_mapping[entity["text"].lower()]
+                gender = app.name_to_gender_mapping[entity["text"].lower()]
             except KeyError:
                 logging.warning(f"Key {entity['text']} not found")
                 continue
@@ -79,15 +89,15 @@ def get_gender_from_name():
 @app.route("/api/list-genders", methods=["GET"])
 @check_token
 def list_genders():
+    return jsonify([{"value": gender, "label": gender} for gender in app.possible_genders])
 
-    return jsonify([{"value": gender, "label": gender} for gender in possible_genders])
+
+@app.route("/", methods=["GET"])
+def get_health():
+    return jsonify({"status": "ok"}), 200
 
 
 if __name__ == "__main__":
-
-    name_to_gender_mapping = {
-        record["name"].lower(): record["gender"] for record in get_airtable_data(AIRTABLE_URL, AIRTABLE_TOKEN)
-    }
-    possible_genders = {record["gender"] for record in get_airtable_data(AIRTABLE_URL, AIRTABLE_TOKEN)}
-
-    app.run(host="0.0.0.0", debug=True)
+    # do NOT run this is prod, flask dev server is not meant for that
+    # check the dockerfile which starts a gunicorn server
+    create_app().run(host="0.0.0.0", debug=True)
