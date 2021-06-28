@@ -31,7 +31,6 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/whitelist-source-range: <fill if needed>
 
   hosts:
     - host: <your webhook URL>
