@@ -11,9 +11,9 @@ from functools import wraps
 
 import requests
 from flask import Flask, abort, jsonify, request
+from flask_cors import CORS
 
 from config import AIRTABLE_TOKEN, AIRTABLE_URL, BEARER_TOKEN
-from flask_cors import CORS
 
 app = Flask(__name__)
 
