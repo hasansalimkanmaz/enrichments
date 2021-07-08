@@ -10,10 +10,10 @@ import logging
 from functools import wraps
 
 import requests
-from flask import Flask, abort, jsonify, make_response, request
-from flask_cors import CORS, cross_origin
+from flask import Flask, abort, jsonify, request
 
 from config import AIRTABLE_TOKEN, AIRTABLE_URL, BEARER_TOKEN
+from flask_cors import CORS
 
 app = Flask(__name__)
 
@@ -32,15 +32,12 @@ def create_app():
 
 def get_airtable_data(url: str, token: str):
     """
-  Fetch all data from airtable.
+    Fetch all data from airtable.
 
-  Returns a list of records where record is an array like
-      {'my-key': 'George W. Bush', 'my-value': 'Male'}
-  """
-    url = AIRTABLE_URL
-    token = AIRTABLE_TOKEN
-
-    response = requests.request("GET", url, headers={"Authorization": f"Bearer {token}",})
+    Returns a list of records where record is an array like
+        {'my-key': 'George W. Bush', 'my-value': 'Male'}
+    """
+    response = requests.request("GET", url, headers={"Authorization": f"Bearer {token}"})
 
     records = response.json()["records"]
 
