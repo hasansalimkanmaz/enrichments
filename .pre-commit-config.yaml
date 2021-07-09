@@ -35,8 +35,6 @@ repos:
       entry: flake8
       types: [python]
       stages: [commit]
-      args:
-        - --max-line-length=120
 
     - id: mypy
       name: mypy
@@ -45,8 +43,6 @@ repos:
       entry: mypy
       types: [python]
       stages: [commit]
-      args:
-        - --ignore-missing-imports
 
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.5.0
