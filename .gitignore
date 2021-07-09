@@ -128,3 +128,9 @@ obj
 appsettings.json
 local.settings.json
 .python_packages
+
+# IntelliJ IDE
+.idea
+
+# repo specific ignored files
+*.pkl
