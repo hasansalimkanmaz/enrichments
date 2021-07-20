@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "action-mapping-enrichment.fullname" . }}
+  name: {{ include "text-classification-enrichment.fullname" . }}
   labels:
-    {{- include "action-mapping-enrichment.labels" . | nindent 4 }}
+    {{- include "text-classification-enrichment.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "action-mapping-enrichment.selectorLabels" . | nindent 6 }}
+      {{- include "text-classification-enrichment.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "action-mapping-enrichment.selectorLabels" . | nindent 8 }}
+        {{- include "text-classification-enrichment.selectorLabels" . | nindent 8 }}
     spec:
       imagePullSecrets:
         - name : acr-secret
@@ -39,4 +39,4 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
             - name: BEARER_TOKEN
-              value: {{ .Values.airtable.bearer | quote }}
+              value: {{ .Values.authorization.bearer | quote }}

@@ -1,6 +1,6 @@
-This is an example data enrichment to classify free-form inspection points to specific action codes for the Metamaze Intelligent Document Processing platform. This enrichment uses a simple Flask API in Python, with data sourced from api call.
+This is an example data enrichment to classify free-form text into specific predefined classes for the Metamaze Intelligent Document Processing platform. This enrichment uses a simple Flask API in Python, with data sourced from api call.
 
-Simple api request contains list of entities with their free-form text and langauges. Enrichment returns specific action points in the order of provided entities.  
+Simple api request contains list of entities with their free-form text and languages. Enrichment returns specific predefined classes in the order of provided entities.  
 
 **An example for the body of a request**
 
@@ -13,7 +13,7 @@ Simple api request contains list of entities with their free-form text and langa
 
 ## Testing in Kubernetes
 You can also find a [Dockerfile](./Dockerfile) and base helm template to serve this example on a kubernetes cluster using `gunicorn`.
-You should adapt the [values.yaml](helm-action-mapping-enrichment/values.yaml) with the necessary fields according to your case.
+You should adapt the [values.yaml](helm-text-classification-enrichment/values.yaml) with the necessary fields according to your case.
 Build the docker image and push it to your container registry and then `helm install` to deploy your enrichment.
 
 

@@ -8,6 +8,7 @@ For more information, see the Metamaze documentation or contact us at support@me
 
 import logging
 from functools import wraps
+from typing import Any, Callable, Dict, List
 
 import requests
 from flask import Flask, abort, jsonify, request
@@ -20,7 +21,7 @@ app = Flask(__name__)
 CORS(app, support_credentials=True)
 
 
-def create_app():
+def create_app() -> Flask:
 
     app.name_to_gender_mapping = {
         record["name"].lower(): record["gender"] for record in get_airtable_data(AIRTABLE_URL, AIRTABLE_TOKEN)
@@ -30,7 +31,7 @@ def create_app():
     return app
 
 
-def get_airtable_data(url: str, token: str):
+def get_airtable_data(url: str, token: str) -> List[Dict[str, str]]:
     """
     Fetch all data from airtable.
 
@@ -44,9 +45,9 @@ def get_airtable_data(url: str, token: str):
     return [record["fields"] for record in records]
 
 
-def check_token(f):
+def check_token(f: Callable) -> Callable:
     @wraps(f)
-    def decorated(*args, **kwargs):
+    def decorated(*args: Any, **kwargs: Any) -> Any:
         print("headers: ", request.headers)
         try:
             token_header = request.headers["authorization"]
@@ -65,7 +66,7 @@ def check_token(f):
 
 @app.route("/api/gender-lookup", methods=["GET"])
 @check_token
-def get_gender_from_name():
+def get_gender_from_name() -> Any:
     content = request.json
 
     enrichments = []
@@ -85,16 +86,16 @@ def get_gender_from_name():
 
 @app.route("/api/list-genders", methods=["GET"])
 @check_token
-def list_genders():
+def list_genders() -> Any:
     return jsonify([{"value": gender, "label": gender} for gender in app.possible_genders])
 
 
 @app.route("/", methods=["GET"])
-def get_health():
+def get_health() -> Any:
     return jsonify({"status": "ok"}), 200
 
 
 if __name__ == "__main__":
-    # do NOT run this is prod, flask dev server is not meant for that
+    # do NOT run this in prod, flask dev server is not meant for that
     # check the dockerfile which starts a gunicorn server
     create_app().run(host="0.0.0.0", debug=True)

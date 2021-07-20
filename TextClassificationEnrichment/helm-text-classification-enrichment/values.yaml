@@ -1,4 +1,4 @@
-# Default values for action-mapping-enrichment.
+# Default values for text-classification-enrichment.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -36,7 +36,7 @@ ingress:
     - host:  <your webhook URL>
       paths: ["/"]
   tls:
-    - secretName: action-mapping-enrichment-tls
+    - secretName: text-classification-enrichment-tls
       hosts:
         -  <your webhook URL>
 
@@ -48,5 +48,5 @@ resources:
     memory: 500Mi
 
 
-airtable:
-  bearer: <fill as needed> <Configured in Metamaze Project Settings>
+authorization:
+  bearer: <fill as needed> // Configured in Metamaze Project Settings > Enrichments
